@@ -1,4 +1,5 @@
 ## MAKE THIS A CLASS (MAYBE PARENT AND SUBCLASS - SEC_SENTIMENT(SecHandler(object)))
+import re
 import nltk
 import requests
 from bs4 import BeautifulSoup

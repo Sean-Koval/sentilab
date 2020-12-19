@@ -2,12 +2,13 @@
 import nltk
 import requests
 from bs4 import BeautifulSoup
+import numpy as np
 
 from collections import defaultdict, Counter
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import jaccard_similarity_score
 from sklearn.feature_extraction.text import TfidfVectorizer
-
+from sklearn.metrics.pairwise import cosine_similarity
 
 from ratelimit import limits, sleep_and_retry
 from nltk.stem import WordNetLemmatizer
@@ -74,6 +75,7 @@ def remove_html_tag(text):
 
     :return text: (str) Returns the text document free of html tags
     """
+
     text = BeautifulSoup(text, 'html.parser').get_text()
 
     return text
@@ -86,6 +88,7 @@ def clean_text(text):
 
     :return text: (str) Returns text document after various preprocessing methods have been applied (html & lowercase)
     """
+
     text = text.lower()
     text = remove_html_tag(text)
 
@@ -99,6 +102,8 @@ def get_document_type(doc):
 
     :return doc_type: (str) Document type lowercase
     """
+
+    type_pattern = re.compile(r'<TYPE>\S+')
     match = next(type_pattern.finditer(doc))
 
     return doc[match.start()+6:match.end()].lower()
@@ -122,6 +127,7 @@ def get_bag_of_words(sentiment_words, docs):
 
     :return bag_of_words: 2-D Numpy Ndarray of int (first dimension: document, second dimension: the word)
     """
+
     # TODO: Implement
     # vectorizer = CountVectorizer(vocabulary=sentiment_words)
     # return vectorizer.fit_transform(docs).toarray()
@@ -134,6 +140,29 @@ def get_bag_of_words(sentiment_words, docs):
             bag_of_words[i,j] = words_count[word]
 
     return bag_of_words
+
+def get_cosine_similarity(tfidf_matrix):
+    """
+    Get cosine similarities for each neighboring TFIDF vector/document
+
+    :param tfidf_matrix:
+
+    :returns:
+    """
+
+    # TODO: Implement
+    # cosine_similarities = cosine_similarity(tfidf_matrix[:-1], tfidf_matrix[1:])
+    #print(cosine_similarities)
+    # return list(cosine_similarities[0])
+
+    # alternatively:
+    cosine_similarities = []
+    for i in range(tfidf_matrix.shape[0] - 1):
+        u = tfidf_matrix[i:i+1]
+        v = tfidf_matrix[i+1:i+2]
+        cosine_similarities.append(cosine_similarity(u,v).squeeze())
+
+    return cosine_similarities
 
 def get_jaccard_similarity(bag_of_words_matrix):
     """
@@ -199,6 +228,7 @@ def print_ten_k_data(ten_k_data, fields, field_length_limit=50):
 
     :return: Prints the downloaded filing documents
     """
+
     indentation = '  '
 
     print('[')

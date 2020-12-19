@@ -1,10 +1,17 @@
 ## MAKE THIS A CLASS (MAYBE PARENT AND SUBCLASS - SEC_SENTIMENT(SecHandler(object)))
-
+import nltk
 import requests
 from bs4 import BeautifulSoup
 
-from ratelimit import limits, sleep_and_retry
+from collections import defaultdict, Counter
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics import jaccard_similarity_score
+from sklearn.feature_extraction.text import TfidfVectorizer
 
+
+from ratelimit import limits, sleep_and_retry
+from nltk.stem import WordNetLemmatizer
+from nltk.corpus import wordnet
 
 class SecHandler:
 
@@ -92,7 +99,9 @@ def get_document_type(doc):
 
     :return doc_type: (str) Document type lowercase
     """
-    return None
+    match = next(type_pattern.finditer(doc))
+
+    return doc[match.start()+6:match.end()].lower()
 
 def lemmatize_words(words):
     """
@@ -101,7 +110,8 @@ def lemmatize_words(words):
     :param words: (List) List of (str) inflections
     :return lemmatized_words: (List) Returns a list of (str) (lemmatized words)
     """
-    return None
+
+    return [WordNetLemmatizer().lemmatize(word, pos="v") for word in words]
 
 def get_bag_of_words(sentiment_words, docs):
     """
@@ -112,7 +122,18 @@ def get_bag_of_words(sentiment_words, docs):
 
     :return bag_of_words: 2-D Numpy Ndarray of int (first dimension: document, second dimension: the word)
     """
-    return None
+    # TODO: Implement
+    # vectorizer = CountVectorizer(vocabulary=sentiment_words)
+    # return vectorizer.fit_transform(docs).toarray()
+
+    # alternatively:
+    bag_of_words = np.zeros([len(docs), len(sentiment_words)], dtype=int)
+    for i, words in enumerate(docs):
+        words_count = Counter(words.split())
+        for j, word in enumerate(sentiment_words):
+            bag_of_words[i,j] = words_count[word]
+
+    return bag_of_words
 
 def get_jaccard_similarity(bag_of_words_matrix):
     """
@@ -122,7 +143,15 @@ def get_jaccard_similarity(bag_of_words_matrix):
 
     :return jaccard_similarities: (List of Float) Jaccard Similarities of neighboring documents
     """
-    return None
+
+    bag_of_words_matrix_bool = bag_of_words_matrix.astype(bool)
+    jaccard_similarities = []
+    for i in range(bag_of_words_matrix.shape[0] - 1):
+        u = bag_of_words_matrix_bool[i]
+        v = bag_of_words_matrix_bool[i+1]
+        jaccard_similarities.append(jaccard_similarity_score(u,v))
+
+    return jaccard_similarities
 
 def get_tfidf(sentiment_words, docs):
     """
@@ -133,7 +162,32 @@ def get_tfidf(sentiment_words, docs):
 
     :return tfidf: (2-D Numpy Ndarray of float) TFIDF sentiment for each document
     """
-    return None
+
+    # TODO: Implement
+    # vectorizer = TfidfVectorizer(vocabulary=sentiment_words)
+    # return vectorizer.fit_transform(docs).toarray()
+
+    # alternatively:
+    N = len(docs)
+    idf = []
+    for word in sentiment_words:
+        freq = sum([ word in d for d in docs])
+        idf.append( N/freq )
+    all_tf_idfs = []
+    for doc in docs:
+        freq = Counter(doc.split())
+        avg = np.mean([freq[w] for w in sentiment_words])
+        doc_tf_idfs = []
+        for i, word in enumerate(sentiment_words[::-1]):
+            tf = freq[word] / avg if avg else 0.
+            doc_tf_idfs.append(tf * idf[i])
+        doc_tf_idfs = np.array(doc_tf_idfs)
+        l2_norm = np.linalg.norm(doc_tf_idfs)
+        if l2_norm != 0.:
+            doc_tf_idfs = doc_tf_idfs / l2_norm
+        all_tf_idfs.append(doc_tf_idfs)
+
+    return np.array(all_tf_idfs)
 
 def print_ten_k_data(ten_k_data, fields, field_length_limit=50):
     """

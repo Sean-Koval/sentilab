@@ -80,7 +80,7 @@ def clean_text(text):
     :return text: (str) Returns text document after various preprocessing methods have been applied (html & lowercase)
     """
     text = text.lower()
-    text = remove_html_tags(text)
+    text = remove_html_tag(text)
 
     return text
 

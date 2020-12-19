@@ -6,7 +6,7 @@ import numpy as np
 
 from collections import defaultdict, Counter
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics import jaccard_similarity_score
+from sklearn.metrics import jaccard_score
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -178,7 +178,7 @@ def get_jaccard_similarity(bag_of_words_matrix):
     for i in range(bag_of_words_matrix.shape[0] - 1):
         u = bag_of_words_matrix_bool[i]
         v = bag_of_words_matrix_bool[i+1]
-        jaccard_similarities.append(jaccard_similarity_score(u,v))
+        jaccard_similarities.append(jaccard_score(u,v))
 
     return jaccard_similarities
 

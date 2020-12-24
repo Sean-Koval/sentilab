@@ -99,7 +99,7 @@ def get_document_type(doc):
     """
     Returns the type of document in lower case
 
-    :param doc: (str) The document string
+    :param doc: (str) The document string (to be analyzed)
 
     :return doc_type: (str) Document type lowercase
     """
@@ -114,6 +114,7 @@ def lemmatize_words(words):
     Lemmatize words (assign the same value to words that have many inflections)
 
     :param words: (List) List of (str) inflections
+
     :return lemmatized_words: (List) Returns a list of (str) (lemmatized words)
     """
 
@@ -123,8 +124,8 @@ def get_bag_of_words(sentiment_words, docs):
     """
     Calculates the bag of words (total number of 'sentiment' words) present in a document
 
-    :param sentiment_words: (str)
-    :param docs: (str)
+    :param sentiment_words: (str) takes a set of words that are significant in the domain and detail sentiment
+    :param docs: (str) The document to be analyzed using the specific words for sentiment
 
     :return bag_of_words: 2-D Numpy Ndarray of int (first dimension: document, second dimension: the word)
     """
@@ -146,9 +147,9 @@ def get_cosine_similarity(tfidf_matrix):
     """
     Get cosine similarities for each neighboring TFIDF vector/document
 
-    :param tfidf_matrix:
+    :param tfidf_matrix: Term frequency-inverse document frequency (determines how important a word is to a document in a collection)
 
-    :returns:
+    :returns: The similarities of the two vectors (how similiar the documents are regardless of size)
     """
 
     # TODO: Implement
@@ -252,5 +253,6 @@ def print_ten_k_data(ten_k_data, fields, field_length_limit=50):
 
         print_statement += '},'
         print(print_statement)
+
     print(']')
 

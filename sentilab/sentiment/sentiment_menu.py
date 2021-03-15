@@ -1,7 +1,7 @@
 import argparse
 
-from sentilab import feature_flags as gtff
-from sentilab.helper_funcs import get_flair
+from sentilab import feature_flags as ff
+from sentilab.helper_functions import get_flair
 from sentilab.menu import session
 from sentilab.sentiment import google_api, reddit_api, stocktwits_api
 from prompt_toolkit.completion import NestedCompleter

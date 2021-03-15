@@ -3,7 +3,7 @@ import argparse
 from sentilab import feature_flags as ff
 from sentilab.helper_functions import get_flair
 from sentilab.menu import session
-from sentilab.sentiment import google_api, reddit_api, stocktwits_api
+from sentilab.sentiment import reddit_api
 from prompt_toolkit.completion import NestedCompleter
 
 
@@ -44,10 +44,10 @@ def print_sentiment():
     return
 
 
-def sen_menu(s_ticker, s_start):
+def sentiment_menu(s_ticker, s_start):
 
     # Add list of arguments that the discovery parser accepts
-    sen_parser = argparse.ArgumentParser(prog="sen", add_help=False)
+    sen_parser = argparse.ArgumentParser(prog="sentiment", add_help=False)
     choices = [
         "help",
         "q",
@@ -76,7 +76,7 @@ def sen_menu(s_ticker, s_start):
     # Loop forever and ever
     while True:
         # Get input command from user
-        if session and gtff.USE_PROMPT_TOOLKIT:
+        if session and ff.USE_PROMPT_TOOLKIT:
             as_input = session.prompt(
                 f"{get_flair()} (sen)> ",
                 completer=completer,
@@ -131,7 +131,7 @@ def sen_menu(s_ticker, s_start):
             stocktwits_api.stalker(l_args)
 
         elif ns_known_args.cmd == "infer":
-            if not gtff.ENABLE_PREDICT:
+            if not ff.ENABLE_PREDICT:
                 print("Predict is not enabled in feature_flags.py")
                 print("Twitter inference menu is disabled")
                 print("")
@@ -154,7 +154,7 @@ def sen_menu(s_ticker, s_start):
             twitter_api.inference(l_args, s_ticker)
 
         elif ns_known_args.cmd == "sentiment":
-            if not gtff.ENABLE_PREDICT:
+            if not ff.ENABLE_PREDICT:
                 print("Predict is not enabled in config_terminal.py")
                 print("Twitter sentiment menu is disabled")
                 print("")

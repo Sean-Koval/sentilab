@@ -2,11 +2,11 @@ import argparse
 from sys import stdout
 import matplotlib.pyplot as plt
 import pandas as pd
-from alpha_vantage.timeseries import TimeSeries
+# from alpha_vantage.timeseries import TimeSeries
 import mplfinance as mpf
 import yfinance as yf
 
-from sentilab.helper_funcs import (
+from sentilab.helper_functions import (
     valid_date,
     plot_view_stock,
     parse_known_args_and_warn,
@@ -17,7 +17,7 @@ from sentilab.helper_funcs import (
 
 from sentilab import config_terminal as cfg
 from sentilab import feature_flags as gtff
-from sentilab.fundamental_analysis import trendline_api as trend
+# from sentilab.fundamental_analysis import trendline_api as trend
 
 
 def print_help(s_ticker, s_start, s_interval, b_is_market_open):

@@ -11,7 +11,7 @@ from colorama import Fore, Style
 import pandas.io.formats.format
 from pandas._config.config import get_option
 from pandas.plotting import register_matplotlib_converters
-from gamestonk_terminal import feature_flags as gtff
+from sentilab import feature_flags as gtff
 
 register_matplotlib_converters()
 
@@ -60,7 +60,7 @@ def plot_view_stock(df, symbol):
     print("")
 
 
-def b_is_stock_market_open() -> bool:
+def is_market_open() -> bool:
     """ checks if the stock market is open """
     # Get current US time
     now = datetime.now(timezone("US/Eastern"))

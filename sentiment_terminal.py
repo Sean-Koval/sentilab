@@ -3,18 +3,21 @@
 # ===============================
 
 import argparse
+
 import pandas as pd
 import six 
-import config_terminal as cfg
+from datetime import datetime, timedelta
+from sentilab import config_terminal as cfg
 from pyfiglet import figlet_format
 
-from alpa_vantage.timeseries import TimeSeries
 from prompt_toolkit.completion import NestedCompleter
 
 from sentilab import feature_flags as ff
 from sentilab.menu import session
-from sentilab.sentiment import sentiment
-from sentilab.fundamental_analysis import fa_menu as fam
+from sentilab.sentiment import sentiment_menu as sm
+from sentilab.helper_functions import is_market_open, get_flair
+from sentilab.main_helper import clear, export, load, print_help, view
+# from sentilab.fundamental_analysis import fa_menu as fam
 
 try:
     import colorama
@@ -49,10 +52,8 @@ def main():
 
     # Arguments
     terminal_menu = argparse.ArgumentParser(prog="sentilab", add_help=False)
-
-    terminal_menu.add_argument(
-        "opt",
-        choices=[
+    
+    choices = [
           "help",
           "quit",
           "clear",
@@ -60,9 +61,10 @@ def main():
           "view",
           "load",
           "export",
-          "sentiment",  
-        ],
-    )
+          "sentiment",
+          ]
+
+    terminal_menu.add_argument("opt", choices=choices)
     
     # Complete the arguments that are not used
     completer = NestedCompleter.from_nested_dict({c: None for c in choices})
@@ -78,7 +80,7 @@ def main():
             help_print = False
         
         if session and ff.USE_PROMPT_TOOLKIT:
-            as input = session.prompt(f"{get_flair()}?> ", completer=completer)
+            as_input = session.prompt(f"{get_flair()}?> ", completer=completer)
         else:
             as_input = input(f"{get_flair()}> ")
         
@@ -89,7 +91,7 @@ def main():
         
         # Parse main command list
         try:
-            (ns_known_args, l_args) = menu_parser.parse_known_args(as_input.split())
+            (ns_known_args, l_args) = terminal_menu.parse_known_args(as_input.split())
         
         except SystemExit:
             print("The command doesn't exist\n")

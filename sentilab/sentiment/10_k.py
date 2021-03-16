@@ -32,41 +32,6 @@ class SecHandler:
     def get(self, url):
         return self._call_sec(url).text
 
-    # def get_sec_data(cik, doc_type, start=0, count=60, date='2018-01-01'):
-    #     """
-    #     Function downloads SEC file data
-
-    #     :param cik:
-    #     :param doc_type:
-    #     :param start:
-    #     :param count:
-    #     :param data: Newest Pricing data date
-    #     :return entries:
-    #     """
-    #     new_price_data = pd.to_datetime(date)
-    #     url = 'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany' \
-    #         '&CIK={}&type={}&start={}&count={}&owner=exclude&output=atom'.format(cik, doc_type, start, count)
-    #     sec_data = SecHandler()..get(url)
-
-    #     feed = BeautifulSoup(sec_data.encode('ascii'), 'xml').feed
-    #     entries = [
-    #         (
-    #             entry.content.find('filing-href').getText(),
-    #             entry.content.find('filing-type').getText(),
-    #             entry.content.find('filing-date').getText())
-
-    #         for entry in feed .find_all('entry', recursive=False)
-    #         if pd.to_datetime(entry.content.find('filing-date').getText()) <= new_price_data]
-
-    #     return entries
-
-    # def get_document_type(doc):
-    # """ Returns the document type in lowecase ascii.  This can be used to filter out documents that are not being looked for
-
-    # :param doc: (str) Document string
-    # :return doc_type: The Document type lowercased
-    # """
-    # return None
 
 def remove_html_tag(text):
     """
@@ -154,7 +119,7 @@ def get_cosine_similarity(tfidf_matrix):
 
     # TODO: Implement
     # cosine_similarities = cosine_similarity(tfidf_matrix[:-1], tfidf_matrix[1:])
-    #print(cosine_similarities)
+    # print(cosine_similarities)
     # return list(cosine_similarities[0])
 
     # alternatively:

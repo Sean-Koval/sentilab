@@ -5,9 +5,9 @@
 
 ### wsb
 
-"""
+```
 command: wsb [-1 N_LIMIT] [-n]
-"""
+```
 
 Print what the WSB subreddit is talking about.
     * -1: Max number of posts to print (def=10)
@@ -15,9 +15,9 @@ Print what the WSB subreddit is talking about.
 
 ### watchlist
 
-"""
+```
 command: watchlist [-l N_LIMIT]
-"""
+```
 
 Print other users watchlist
   * -l : limit of posts to print (def=5)
@@ -26,9 +26,9 @@ Print other users watchlist
 
 ### popular
 
-"""
+```
 command: popular [-l N_LIMIT] [-s S_SUBREDDIT] [-d N_DAYS]
-"""
+```
 
 Print latest popular tickers. [Source: Reddit]
   * -l : limit of posts retrieved per sub reddit. Default 50.
@@ -39,9 +39,9 @@ Print latest popular tickers. [Source: Reddit]
 
 ### spac_c
 
-"""
+```
 command: spac_c [-l N_LIMIT] [-p]
-"""
+```
 
 Print other users SPACs announcement under subreddit "SPACs"
   * -l : limit of posts with SPACs retrieved (def=10)
@@ -50,9 +50,9 @@ Print other users SPACs announcement under subreddit "SPACs"
 
 ### spac
 
-"""
+```
 command: spac [-h] [-l N_LIMIT] [-d N_DAYS]
-"""
+```
 
 Print other users SPACs announcement under subreddit "SPACs"
   * -l : limit of posts with SPACs retrieved (def=5)

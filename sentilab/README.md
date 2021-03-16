@@ -1,5 +1,4 @@
-# Application for pulling sentiment
-
+# Sentilab
 #----------------------------------
 
 This can be used to retrieve and analyze information from various
@@ -8,7 +7,7 @@ data sources.
 ## Market Sentiment
 Commands
 ----|----
-[Reddit](https://reddit.com)
+[Reddit](https://reddit.com)\n
 'wsb'           |shows what WSB forum is up to
 'watchlist'     |shows other users watchlist
 'popular'       |displays popular tickers

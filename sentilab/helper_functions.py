@@ -11,26 +11,30 @@ from colorama import Fore, Style
 import pandas.io.formats.format
 from pandas._config.config import get_option
 from pandas.plotting import register_matplotlib_converters
-from sentilab import feature_flags as gtff
+from sentilab import feature_flags as ff
 
 register_matplotlib_converters()
 
 
-def check_non_negative(value) -> int:
+def check_non_negative(value):
     ivalue = int(value)
+    
     if ivalue < 0:
         raise argparse.ArgumentTypeError(f"{value} is negative")
+    
     return ivalue
 
 
-def check_positive(value) -> int:
+def check_positive(value):
     ivalue = int(value)
+    
     if ivalue <= 0:
         raise argparse.ArgumentTypeError(f"{value} is an invalid positive int value")
+    
     return ivalue
 
 
-def valid_date(s: str) -> datetime:
+def valid_date(s: str):
     try:
         return datetime.strptime(s, "%Y-%m-%d")
     except ValueError as value_error:
@@ -38,11 +42,15 @@ def valid_date(s: str) -> datetime:
 
 
 def plot_view_stock(df, symbol):
+    
     df.sort_index(ascending=True, inplace=True)
+    
     _, axVolume = plt.subplots()
+    
     plt.bar(df.index, df.iloc[:, -1], color="k", alpha=0.8, width=0.3)
     plt.ylabel("Volume")
     _ = axVolume.twinx()
+    
     plt.plot(df.index, df.iloc[:, :-1])
     plt.title(symbol + " (Time Series)")
     plt.xlim(df.index[0], df.index[-1])
@@ -53,20 +61,23 @@ def plot_view_stock(df, symbol):
     plt.minorticks_on()
     plt.grid(b=True, which="minor", color="#999999", linestyle="-", alpha=0.2)
 
-    if gtff.USE_ION:
+    if ff.USE_ION:
         plt.ion()
 
     plt.show()
+    
     print("")
 
 
-def is_market_open() -> bool:
+def is_market_open():
+    
     """ checks if the stock market is open """
     # Get current US time
     now = datetime.now(timezone("US/Eastern"))
     # Check if it is a weekend
     if now.date().weekday() > 4:
         return False
+    
     # Check if it is a holiday
     if now.strftime("%Y-%m-%d") in holidaysUS():
         return False
@@ -88,8 +99,10 @@ def long_number_format(num) -> str:
             num /= 1000.0
         num_str = int(num) if num.is_integer() else f"{num:.3f}"
         return f"{num_str} {' KMBTP'[magnitude]}".strip()
+    
     if isinstance(num, int):
         num = str(num)
+        
     if num.lstrip("-").isdigit():
         num = int(num)
         num /= 1.0
@@ -99,10 +112,11 @@ def long_number_format(num) -> str:
             num /= 1000.0
         num_str = int(num) if num.is_integer() else f"{num:.3f}"
         return f"{num_str} {' KMBTP'[magnitude]}".strip()
+    
     return num
 
 
-def clean_data_values_to_float(val: str) -> float:
+def clean_data_values_to_float(val: str):
     # Remove any leading or trailing parentheses and spaces
     val = val.strip("( )")
     if val == "-":
@@ -122,10 +136,11 @@ def clean_data_values_to_float(val: str) -> float:
         val_as_float = float(val[:-1]) * 1000
     else:
         val_as_float = float(val)
+
     return val_as_float
 
 
-def int_or_round_float(x) -> str:
+def int_or_round_float(x):
     if (x - int(x) < -sys.float_info.epsilon) or (x - int(x) > sys.float_info.epsilon):
         return " " + str(round(x, 2))
 
@@ -138,7 +153,7 @@ def divide_chunks(data, n):
         yield data[i : i + n]
 
 
-def get_next_stock_market_days(last_stock_day, n_next_days) -> list:
+def get_next_stock_market_days(last_stock_day, n_next_days):
     n_days = 0
     l_pred_days = list()
     while n_days < n_next_days:
@@ -159,6 +174,7 @@ def get_next_stock_market_days(last_stock_day, n_next_days) -> list:
 
 
 def get_data(tweet):
+    
     if "+" in tweet["created_at"]:
         s_datetime = tweet["created_at"].split(" +")[0]
     else:
@@ -172,10 +188,11 @@ def get_data(tweet):
         s_text = tweet["text"]
 
     data = {"created_at": s_datetime, "text": s_text}
+    
     return data
 
 
-def clean_tweet(tweet: str, s_ticker: str) -> str:
+def clean_tweet(tweet: str, s_ticker: str):
     whitespace = re.compile(r"\s+")
     web_address = re.compile(r"(?i)http(s):\/\/[a-z0-9.~_\-\/]+")
     ticker = re.compile(fr"(?i)@{s_ticker}(?=\b)")
@@ -189,7 +206,7 @@ def clean_tweet(tweet: str, s_ticker: str) -> str:
     return tweet
 
 
-def get_user_agent() -> str:
+def get_user_agent():
     user_agent_strings = [
         "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.10; rv:86.1) Gecko/20100101 Firefox/86.1",
         "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:86.1) Gecko/20100101 Firefox/86.1",
@@ -233,6 +250,7 @@ def text_adjustment_justify(self, texts, max_len, mode="right"):
             )
         else:
             out.append(jfunc(s, max_len))
+            
     return out
 
 
@@ -260,6 +278,7 @@ def text_adjustment_adjoin(self, space, *lists, **kwargs):
         new_cols.append(c)
 
     rows = [self.join_unicode(row_tup) for row_tup in zip(*new_cols)]
+    
     return self.join_unicode(rows, sep="\n")
 
 
@@ -299,23 +318,19 @@ def financials_colored_values(val: str) -> str:
                 val = f"{Fore.GREEN}{val}{Style.RESET_ALL}"
         elif "(" in val:
             val = f"{Fore.RED}{val}{Style.RESET_ALL}"
+            
     return val
 
 
-def check_ohlc(type_ohlc: str) -> str:
-    if bool(re.match("^[ohlca]+$", type_ohlc)):
-        return type_ohlc
-    raise argparse.ArgumentTypeError("The type specified is not recognized")
-
-
-def lett_to_num(word: str) -> str:
+def lett_to_num(word: str):
     replacements = [("o", "1"), ("h", "2"), ("l", "3"), ("c", "4"), ("a", "5")]
     for (a, b) in replacements:
         word = word.replace(a, b)
+        
     return word
 
 
-def check_sources(source: str) -> str:
+def check_sources(source: str):
     available_historical_price_sources = ["yf", "av"]
     if source in available_historical_price_sources:
         return source
@@ -349,7 +364,7 @@ def get_flair() -> str:
         "yy": "(☯)",
     }
 
-    if flair.get(gtff.USE_FLAIR):
-        return flair[gtff.USE_FLAIR]
+    if flair.get(ff.USE_FLAIR):
+        return flair[ff.USE_FLAIR]
 
     return ""

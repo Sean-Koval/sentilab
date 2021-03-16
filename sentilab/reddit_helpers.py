@@ -11,6 +11,7 @@ def print_and_record_reddit_post(submissions_dict, submission):
     )
     s_link = f"https://old.reddit.com{submission.permalink}"
     s_all_awards = ""
+    
     for award in submission.all_awardings:
         s_all_awards += f"{award['count']} {award['name']}\n"
     s_all_awards = s_all_awards[:-2]
@@ -29,6 +30,7 @@ def print_and_record_reddit_post(submissions_dict, submission):
     # Print post data collected so far
     print(f"{s_datetime} - {submission.title}")
     print(f"{s_link}")
+    
     t_post = PrettyTable(
         ["Subreddit", "Flair", "Score", "# Comments", "Upvote %", "Awards"]
     )
@@ -42,6 +44,7 @@ def print_and_record_reddit_post(submissions_dict, submission):
             s_all_awards,
         ]
     )
+    
     print(t_post)
     print("\n")
 
@@ -61,6 +64,7 @@ def get_last_time_market_was_open(dt):
 
 
 def find_tickers(submission):
+    
     ls_text = list()
     ls_text.append(submission.selftext)
     ls_text.append(submission.title)

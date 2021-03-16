@@ -16,7 +16,7 @@ from sentilab import feature_flags as ff
 from sentilab.menu import session
 from sentilab.sentiment import sentiment_menu as sm
 from sentilab.helper_functions import is_market_open, get_flair
-from sentilab.main_helper import clear, export, load, print_help, view
+from sentilab.main_helper import print_help
 # from sentilab.fundamental_analysis import fa_menu as fam
 
 try:
@@ -56,10 +56,6 @@ def main():
     choices = [
           "help",
           "quit",
-          "clear",
-          "load",
-          "view",
-          "load",
           "export",
           "sentiment",
           ]
@@ -103,23 +99,7 @@ def main():
         
         elif (ns_known_args.opt == "quit") or (ns_known_args.opt == "q"):
             break
-        
-        elif (ns_known_args.opt == "clear"):
-            ticker, start, interval, df_stock = clear(
-                l_args, ticker, start, interval, df_stock
-            )
-            main_command = True 
             
-        elif ns_known_args.opt == "load":
-            ticker, start, interval, df_stock = load(
-                l_args, ticker, start, interval, df_stock
-            )
-            main_command = True 
-            
-        
-        elif ns_known_args.opt == "view":
-            view(l_args, ticker, start, interval, df_stock)
-            main_command = True 
         
         elif ns_known_args.opt == "sentiment":
             b_quit = sm.sentiment_menu(ticker, start)
@@ -137,24 +117,7 @@ def main():
         
         
     print("Exiting sentilab Terminal.\n")
-
-
-
-
-# --------------------------------
-def load(args, ticker, start, interval, stock):
-    """
-    Function for loading infromation on a given ticker.
-
-    Args:
-        args (List): [description]
-        ticker (String): [description]
-        start (String): [description]
-        interval (String): [description]
-        stock (DataFrame): [description]
-    """
-
-    parser = argparse.ArgumentParser()
+    
 
 if __name__ == "__main__":
     main()

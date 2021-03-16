@@ -24,21 +24,9 @@ def print_sentiment():
     )
     print("   spac          show other users spacs announcements from other subs")
     print("")
-    print("Stocktwits:")
-    print("   bullbear      estimate quick sentiment from last 30 messages on board")
-    print("   messages      output up to the 30 last messages on the board")
-    print("   trending      trending stocks")
-    print("   stalker       stalk stocktwits user's last messages")
-    print("")
     print("Twitter:")
     print("   infer         infer about stock's sentiment from latest tweets")
     print("   sentiment     in-depth sentiment prediction from tweets over time")
-    print("")
-    print("Google:")
-    print("   mentions      interest over time based on stock's mentions")
-    print("   regions       regions that show highest interest in stock")
-    print("   queries       top related queries with this stock")
-    print("   rise          top rising related queries with stock")
     print("")
 
     return
@@ -57,16 +45,8 @@ def sentiment_menu(s_ticker, s_start):
         "spac_c",
         "wsb",
         "popular",
-        "bullbear",
-        "messages",
-        "trending",
-        "stalker",
         "infer",
         "sentiment",
-        "mentions",
-        "regions",
-        "queries",
-        "rise",
     ]
     sen_parser.add_argument("cmd", choices=choices)
     completer = NestedCompleter.from_nested_dict({c: None for c in choices})
@@ -108,6 +88,9 @@ def sentiment_menu(s_ticker, s_start):
 
         elif ns_known_args.cmd == "spac":
             reddit_api.spac(l_args)
+        
+        elif ns_known_args.cmd == "popular":
+            reddit_api.spac(l_args)
 
         elif ns_known_args.cmd == "spac_c":
             reddit_api.spac_community(l_args)
@@ -115,22 +98,8 @@ def sentiment_menu(s_ticker, s_start):
         elif ns_known_args.cmd == "wsb":
             reddit_api.wsb_community(l_args)
 
-        elif ns_known_args.cmd == "popular":
-            reddit_api.popular_tickers(l_args)
-
-        elif ns_known_args.cmd == "bullbear":
-            stocktwits_api.bullbear(l_args, s_ticker)
-
-        elif ns_known_args.cmd == "messages":
-            stocktwits_api.messages(l_args, s_ticker)
-
-        elif ns_known_args.cmd == "trending":
-            stocktwits_api.trending(l_args)
-
-        elif ns_known_args.cmd == "stalker":
-            stocktwits_api.stalker(l_args)
-
         elif ns_known_args.cmd == "infer":
+            
             if not ff.ENABLE_PREDICT:
                 print("Predict is not enabled in feature_flags.py")
                 print("Twitter inference menu is disabled")
@@ -140,12 +109,14 @@ def sentiment_menu(s_ticker, s_start):
             try:
                 # pylint: disable=import-outside-toplevel
                 from sentilab.sentiment import twitter_api
+                
             except ModuleNotFoundError as e:
                 print("One of the optional packages seems to be missing")
                 print("Optional packages need to be installed")
                 print(e)
                 print("")
                 continue
+            
             except Exception as e:
                 print(e)
                 print("")
@@ -175,18 +146,6 @@ def sentiment_menu(s_ticker, s_start):
                 continue
 
             twitter_api.sentiment(l_args, s_ticker)
-
-        elif ns_known_args.cmd == "mentions":
-            google_api.mentions(l_args, s_ticker, s_start)
-
-        elif ns_known_args.cmd == "regions":
-            google_api.regions(l_args, s_ticker)
-
-        elif ns_known_args.cmd == "queries":
-            google_api.queries(l_args, s_ticker)
-
-        elif ns_known_args.cmd == "rise":
-            google_api.rise(l_args, s_ticker)
 
         else:
             print("Command not recognized!")
